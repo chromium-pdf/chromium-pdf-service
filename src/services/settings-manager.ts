@@ -1,7 +1,7 @@
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { dirname } from 'node:path';
-import type { Settings } from '../types/index.js';
+import type { Settings, DeepPartial } from '../types/index.js';
 import { defaultSettings } from '../config/default-settings.js';
 import { env } from '../config/env.js';
 import { logger } from '../utils/logger.js';
@@ -53,7 +53,7 @@ class SettingsManager {
     return { ...this.settings };
   }
 
-  async update(newSettings: Partial<Settings>): Promise<Settings> {
+  async update(newSettings: DeepPartial<Settings>): Promise<Settings> {
     this.settings = this.mergeWithDefaults({
       ...this.settings,
       ...newSettings,
@@ -98,7 +98,7 @@ class SettingsManager {
     return this.settings;
   }
 
-  private mergeWithDefaults(partial: Partial<Settings>): Settings {
+  private mergeWithDefaults(partial: DeepPartial<Settings>): Settings {
     return {
       browser: {
         maxConcurrent: partial.browser?.maxConcurrent ?? defaultSettings.browser.maxConcurrent,

@@ -1,3 +1,12 @@
+// Deep Partial utility type (preserves arrays as-is)
+export type DeepPartial<T> = {
+  [P in keyof T]?: T[P] extends (infer U)[]
+    ? U[]
+    : T[P] extends object
+      ? DeepPartial<T[P]>
+      : T[P];
+};
+
 // PDF Job Status
 export type JobStatus = 'queued' | 'processing' | 'completed' | 'failed' | 'cancelled';
 

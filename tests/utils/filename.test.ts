@@ -25,18 +25,18 @@ describe('Filename Utilities', () => {
   });
 
   describe('generatePdfFilename', () => {
-    it('should generate filename with time only format', () => {
+    it('should generate filename with date and time format', () => {
       const date = new Date('2024-01-15T10:30:45.000Z');
       const filename = generatePdfFilename('invoice-123', date);
 
       // Note: The hour will depend on the timezone
-      expect(filename).toMatch(/^invoice-123__\d{2}-30-45\.pdf$/);
+      expect(filename).toMatch(/^invoice-123__15-01-2024_\d{2}-30-45\.pdf$/);
     });
 
-    it('should use current time when not provided', () => {
+    it('should use current date/time when not provided', () => {
       const filename = generatePdfFilename('test-key');
 
-      expect(filename).toMatch(/^test-key__\d{2}-\d{2}-\d{2}\.pdf$/);
+      expect(filename).toMatch(/^test-key__\d{2}-\d{2}-\d{4}_\d{2}-\d{2}-\d{2}\.pdf$/);
     });
 
     it('should handle requestedKey with dashes and underscores', () => {
@@ -47,20 +47,19 @@ describe('Filename Utilities', () => {
       expect(filename.endsWith('.pdf')).toBe(true);
     });
 
-    it('should pad single digit time values with zeros', () => {
+    it('should pad single digit values with zeros', () => {
       const date = new Date('2024-01-05T08:05:09.000Z');
       const filename = generatePdfFilename('test', date);
 
-      // Should have padded time values
-      expect(filename).toMatch(/test__\d{2}-05-09\.pdf/);
+      // Should have padded date and time values
+      expect(filename).toMatch(/test__05-01-2024_\d{2}-05-09\.pdf/);
     });
   });
 
   describe('parsePdfFilename', () => {
-    it('should parse valid filename correctly with date folder', () => {
-      const filename = 'invoice-123__10-30-45.pdf';
-      const dateFolder = '15-01-2024';
-      const result = parsePdfFilename(filename, dateFolder);
+    it('should parse valid filename correctly', () => {
+      const filename = 'invoice-123__15-01-2024_10-30-45.pdf';
+      const result = parsePdfFilename(filename);
 
       expect(result).not.toBeNull();
       expect(result?.requestedKey).toBe('invoice-123');
@@ -73,22 +72,9 @@ describe('Filename Utilities', () => {
       expect(result?.timestamp.getSeconds()).toBe(45);
     });
 
-    it('should parse filename without date folder using today', () => {
-      const filename = 'invoice-123__10-30-45.pdf';
-      const result = parsePdfFilename(filename);
-
-      expect(result).not.toBeNull();
-      expect(result?.requestedKey).toBe('invoice-123');
-      expect(result?.timestamp).toBeInstanceOf(Date);
-      expect(result?.timestamp.getHours()).toBe(10);
-      expect(result?.timestamp.getMinutes()).toBe(30);
-      expect(result?.timestamp.getSeconds()).toBe(45);
-    });
-
     it('should parse filename with complex requestedKey', () => {
-      const filename = 'my-complex_key-with-123__23-59-59.pdf';
-      const dateFolder = '31-12-2024';
-      const result = parsePdfFilename(filename, dateFolder);
+      const filename = 'my-complex_key-with-123__31-12-2024_23-59-59.pdf';
+      const result = parsePdfFilename(filename);
 
       expect(result).not.toBeNull();
       expect(result?.requestedKey).toBe('my-complex_key-with-123');
@@ -99,7 +85,7 @@ describe('Filename Utilities', () => {
         'invalid-filename.pdf',
         'no-timestamp__.pdf',
         'missing__extension',
-        'wrong__2024-01-15-10-30-45.pdf', // old format with date
+        'wrong__10-30-45.pdf', // old format without date
         '',
       ];
 
@@ -110,7 +96,7 @@ describe('Filename Utilities', () => {
     });
 
     it('should return null for filename without .pdf extension', () => {
-      const filename = 'test__10-30-45.txt';
+      const filename = 'test__15-01-2024_10-30-45.txt';
       const result = parsePdfFilename(filename);
 
       expect(result).toBeNull();
@@ -121,8 +107,7 @@ describe('Filename Utilities', () => {
       const originalDate = new Date('2024-06-15T14:30:00.000Z');
 
       const filename = generatePdfFilename(originalKey, originalDate);
-      const dateFolder = generateDateFolder(originalDate);
-      const parsed = parsePdfFilename(filename, dateFolder);
+      const parsed = parsePdfFilename(filename);
 
       expect(parsed).not.toBeNull();
       expect(parsed?.requestedKey).toBe(originalKey);

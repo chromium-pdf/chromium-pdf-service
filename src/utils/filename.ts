@@ -20,9 +20,7 @@ export function parsePdfFilename(filename: string): {
   requestedKey: string;
   timestamp: Date;
 } | null {
-  const match = filename.match(
-    /^(.+)__(\d{4})-(\d{2})-(\d{2})-(\d{2})-(\d{2})-(\d{2})\.pdf$/
-  );
+  const match = filename.match(/^(.+)__(\d{4})-(\d{2})-(\d{2})-(\d{2})-(\d{2})-(\d{2})\.pdf$/);
 
   if (!match) return null;
 

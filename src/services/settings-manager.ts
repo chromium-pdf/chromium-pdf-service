@@ -19,7 +19,7 @@ class SettingsManager {
     try {
       await this.load();
       logger.info('Settings loaded successfully');
-    } catch (error) {
+    } catch (_error) {
       logger.warn('No existing settings found, using defaults');
       await this.save();
     }
@@ -41,11 +41,7 @@ class SettingsManager {
       await mkdir(dir, { recursive: true });
     }
 
-    await writeFile(
-      this.settingsPath,
-      JSON.stringify(this.settings, null, 2),
-      'utf-8'
-    );
+    await writeFile(this.settingsPath, JSON.stringify(this.settings, null, 2), 'utf-8');
     logger.info('Settings saved successfully');
   }
 
@@ -104,11 +100,17 @@ class SettingsManager {
         maxConcurrent: partial.browser?.maxConcurrent ?? defaultSettings.browser.maxConcurrent,
         defaultTimeout: partial.browser?.defaultTimeout ?? defaultSettings.browser.defaultTimeout,
         defaultViewport: {
-          width: partial.browser?.defaultViewport?.width ?? defaultSettings.browser.defaultViewport.width,
-          height: partial.browser?.defaultViewport?.height ?? defaultSettings.browser.defaultViewport.height,
+          width:
+            partial.browser?.defaultViewport?.width ??
+            defaultSettings.browser.defaultViewport.width,
+          height:
+            partial.browser?.defaultViewport?.height ??
+            defaultSettings.browser.defaultViewport.height,
         },
         launchOptions: {
-          headless: partial.browser?.launchOptions?.headless ?? defaultSettings.browser.launchOptions.headless,
+          headless:
+            partial.browser?.launchOptions?.headless ??
+            defaultSettings.browser.launchOptions.headless,
           args: partial.browser?.launchOptions?.args ?? defaultSettings.browser.launchOptions.args,
         },
       },
@@ -124,13 +126,15 @@ class SettingsManager {
       },
       queue: {
         maxSize: partial.queue?.maxSize ?? defaultSettings.queue.maxSize,
-        processingTimeout: partial.queue?.processingTimeout ?? defaultSettings.queue.processingTimeout,
+        processingTimeout:
+          partial.queue?.processingTimeout ?? defaultSettings.queue.processingTimeout,
         retryAttempts: partial.queue?.retryAttempts ?? defaultSettings.queue.retryAttempts,
         retryDelay: partial.queue?.retryDelay ?? defaultSettings.queue.retryDelay,
       },
       storage: {
         outputDir: partial.storage?.outputDir ?? defaultSettings.storage.outputDir,
-        cleanupAfterHours: partial.storage?.cleanupAfterHours ?? defaultSettings.storage.cleanupAfterHours,
+        cleanupAfterHours:
+          partial.storage?.cleanupAfterHours ?? defaultSettings.storage.cleanupAfterHours,
       },
     };
   }

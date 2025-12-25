@@ -1,5 +1,5 @@
 import { EventEmitter } from 'node:events';
-import type { PdfJob, JobStatus, BrowserOptions, PdfOptions } from '../types/index.js';
+import type { PdfJob, JobStatus } from '../types/index.js';
 import { settingsManager } from './settings-manager.js';
 import { logger } from '../utils/logger.js';
 
@@ -17,7 +17,9 @@ class QueueManager extends EventEmitter {
     super();
   }
 
-  async addJob(job: Omit<PdfJob, 'status' | 'progress' | 'createdAt' | 'updatedAt'>): Promise<PdfJob> {
+  async addJob(
+    job: Omit<PdfJob, 'status' | 'progress' | 'createdAt' | 'updatedAt'>
+  ): Promise<PdfJob> {
     const settings = settingsManager.get();
 
     // Check queue size limit
@@ -52,15 +54,17 @@ class QueueManager extends EventEmitter {
     return this.queue.get(requestedKey);
   }
 
-  getJobStatus(requestedKey: string): {
-    requestedKey: string;
-    status: JobStatus;
-    progress: number;
-    createdAt: string;
-    updatedAt: string;
-    filePath?: string;
-    error?: string;
-  } | undefined {
+  getJobStatus(requestedKey: string):
+    | {
+        requestedKey: string;
+        status: JobStatus;
+        progress: number;
+        createdAt: string;
+        updatedAt: string;
+        filePath?: string;
+        error?: string;
+      }
+    | undefined {
     const job = this.queue.get(requestedKey);
     if (!job) return undefined;
 

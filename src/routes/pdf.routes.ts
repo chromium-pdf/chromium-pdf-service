@@ -1,12 +1,7 @@
 import { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
 import multipart from '@fastify/multipart';
 import { pdfGenerator } from '../services/pdf-generator.js';
-import {
-  htmlPdfRequestSchema,
-  urlPdfRequestSchema,
-  HtmlPdfRequest,
-  UrlPdfRequest,
-} from '../schemas/pdf.schema.js';
+import { htmlPdfRequestSchema, urlPdfRequestSchema } from '../schemas/pdf.schema.js';
 import { ZodError } from 'zod';
 
 export async function pdfRoutes(app: FastifyInstance): Promise<void> {
@@ -124,7 +119,11 @@ export async function pdfRoutes(app: FastifyInstance): Promise<void> {
 
       // Extract requestedKey
       const requestedKeyField = fields['requestedKey'];
-      if (!requestedKeyField || typeof requestedKeyField !== 'object' || !('value' in requestedKeyField)) {
+      if (
+        !requestedKeyField ||
+        typeof requestedKeyField !== 'object' ||
+        !('value' in requestedKeyField)
+      ) {
         return reply.status(400).send({
           error: 'requestedKey is required',
         });

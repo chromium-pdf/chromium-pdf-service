@@ -1,8 +1,8 @@
 # Chromium PDF Service
 
-A commercial-friendly PDF generation microservice built with Fastify, TypeScript, Playwright, and Docker. Generate PDFs from HTML, URLs, or uploaded files with full control over browser and PDF options.
+A simple PDF generation service built with Fastify, TypeScript, Playwright, and Docker. Generate PDFs from HTML, URLs, or uploaded files with full control over browser and PDF options.
 
-## Features
+## ✨ Features
 
 - **Multiple Input Sources**: Generate PDFs from HTML content, URLs, or uploaded HTML files
 - **Queue System**: Built-in job queue with priority support, status tracking, and cancellation
@@ -11,7 +11,7 @@ A commercial-friendly PDF generation microservice built with Fastify, TypeScript
 - **Health Checks**: Kubernetes-compatible health, readiness, and liveness endpoints
 - **Logging**: Structured JSON logging with Pino
 
-## Quick Start
+## 🚀 Quick Start
 
 ### Using Docker Compose (Recommended)
 
@@ -45,7 +45,7 @@ npm run build
 npm start
 ```
 
-## API Endpoints
+## 📡 API Endpoints
 
 ### PDF Generation
 
@@ -173,7 +173,7 @@ GET /health/ready # Readiness probe
 GET /health/live  # Liveness probe with queue stats
 ```
 
-## Configuration
+## ⚙️ Configuration
 
 ### Environment Variables
 
@@ -217,7 +217,7 @@ GET /health/live  # Liveness probe with queue stats
 }
 ```
 
-## Request Options
+## 🔧 Request Options
 
 ### Browser Options
 
@@ -247,7 +247,7 @@ GET /health/live  # Liveness probe with queue stats
 |--------|------|-------------|
 | `priority` | number | Priority level 1-10 (higher = processed first) |
 
-## File Naming
+## 📁 File Naming
 
 Generated PDFs are stored with the format:
 
@@ -257,7 +257,7 @@ Generated PDFs are stored with the format:
 
 Example: `invoice-12345__2024-01-15-10-30-45.pdf`
 
-## Job Status Values
+## 📊 Job Status Values
 
 | Status | Description |
 |--------|-------------|
@@ -267,6 +267,6 @@ Example: `invoice-12345__2024-01-15-10-30-45.pdf`
 | `failed` | PDF generation failed |
 | `cancelled` | Job was cancelled |
 
-## License
+## 📄 License
 
 MIT

@@ -6,6 +6,8 @@ A simple PDF generation service built with Fastify, TypeScript, Playwright, and 
 
 - **Multiple Input Sources**: Generate PDFs from HTML content, URLs, or uploaded HTML files
 - **Queue System**: Built-in job queue with priority support, status tracking, and cancellation
+- **Idempotent Requests**: Same `requestedKey` returns existing PDF if already completed
+- **Custom Dimensions**: Use predefined formats (A4, Letter) or custom width/height
 - **Configurable**: Customizable browser options, PDF settings, and queue limits
 - **Docker Ready**: Production-ready Docker configuration with Chromium
 - **Health Checks**: Kubernetes-compatible health, readiness, and liveness endpoints
@@ -85,6 +87,28 @@ Content-Type: application/json
 }
 ```
 
+#### Generate PDF with Custom Dimensions
+
+```bash
+POST /api/pdf/from-url
+Content-Type: application/json
+
+{
+  "requestedKey": "custom-size-pdf",
+  "url": "https://example.com",
+  "options": {
+    "browser": {
+      "viewport": { "width": 400, "height": 800 }
+    },
+    "pdf": {
+      "width": 400,
+      "height": 800,
+      "printBackground": true
+    }
+  }
+}
+```
+
 #### Generate PDF from File
 
 ```bash
@@ -111,9 +135,9 @@ Response:
   "requestedKey": "invoice-12345",
   "status": "completed",
   "progress": 100,
-  "createdAt": "2024-01-15T10:30:00.000Z",
-  "updatedAt": "2024-01-15T10:30:05.000Z",
-  "filePath": "pdf-files/invoice-12345__2024-01-15-10-30-05.pdf"
+  "createdAt": "2025-01-15T10:30:00.000Z",
+  "updatedAt": "2025-01-15T10:30:05.000Z",
+  "filePath": "pdf-files/invoice-12345__2025-01-15-10-30-05.pdf"
 }
 ```
 
@@ -233,6 +257,8 @@ GET /health/live  # Liveness probe with queue stats
 | Option | Type | Description |
 |--------|------|-------------|
 | `format` | string | `A4`, `Letter`, `Legal`, `A3`, `A5` |
+| `width` | string/number | Custom width (e.g., `800`, `"10in"`, `"25cm"`) |
+| `height` | string/number | Custom height (e.g., `600`, `"8in"`, `"20cm"`) |
 | `landscape` | boolean | Landscape orientation |
 | `margin` | object | `{ top, right, bottom, left }` |
 | `printBackground` | boolean | Print background graphics |
@@ -240,6 +266,8 @@ GET /health/live  # Liveness probe with queue stats
 | `headerTemplate` | string | HTML template for header |
 | `footerTemplate` | string | HTML template for footer |
 | `displayHeaderFooter` | boolean | Show header/footer |
+
+> **Note:** Use either `format` OR `width`/`height`, not both. Custom dimensions override format.
 
 ### Queue Options
 
@@ -255,7 +283,7 @@ Generated PDFs are stored with the format:
 {requestedKey}__{year}-{month}-{day}-{hour}-{minute}-{second}.pdf
 ```
 
-Example: `invoice-12345__2024-01-15-10-30-45.pdf`
+Example: `invoice-12345__2025-01-15-10-30-45.pdf`
 
 ## 📊 Job Status Values
 

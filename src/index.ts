@@ -2,10 +2,14 @@ import { buildApp } from './app.js';
 import { logger } from './utils/logger.js';
 import { env } from './config/env.js';
 import { settingsManager } from './services/settings-manager.js';
+import { pdfGenerator } from './services/pdf-generator.js';
 
 async function start(): Promise<void> {
   // Initialize settings
   await settingsManager.initialize();
+
+  // Initialize PDF generator (launches browser)
+  await pdfGenerator.initialize();
 
   const app = await buildApp();
 
@@ -22,6 +26,7 @@ async function start(): Promise<void> {
     logger.info(`Received ${signal}, shutting down gracefully...`);
     try {
       await app.close();
+      await pdfGenerator.close();
       logger.info('Server closed successfully');
       process.exit(0);
     } catch (err) {

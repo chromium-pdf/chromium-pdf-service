@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  pdf-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: chromium-pdf-service
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - HOST=0.0.0.0
+      - PORT=3000
+      - LOG_LEVEL=info
+      - SETTINGS_PATH=/app/data/settings.json
+      - OUTPUT_DIR=/app/pdf-files
+    volumes:
+      # Persist settings
+      - pdf-settings:/app/data
+      # Persist generated PDFs
+      - pdf-files:/app/pdf-files
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/health', (r) => process.exit(r.statusCode === 200 ? 0 : 1))"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    # Resource limits (adjust based on your needs)
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+
+volumes:
+  pdf-settings:
+    driver: local
+  pdf-files:
+    driver: local

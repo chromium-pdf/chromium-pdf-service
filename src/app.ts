@@ -4,6 +4,8 @@ import { isDevelopment } from './config/env.js';
 import { pdfRoutes } from './routes/pdf.routes.js';
 import { statusRoutes } from './routes/status.routes.js';
 import { settingsRoutes } from './routes/settings.routes.js';
+import { healthRoutes } from './routes/health.routes.js';
+import { errorHandler } from './middleware/error-handler.js';
 
 export async function buildApp(): Promise<FastifyInstance> {
   const app = Fastify({
@@ -21,6 +23,9 @@ export async function buildApp(): Promise<FastifyInstance> {
       : true,
   });
 
+  // Register error handler
+  app.setErrorHandler(errorHandler);
+
   // Register CORS
   await app.register(cors, {
     origin: true,
@@ -28,6 +33,7 @@ export async function buildApp(): Promise<FastifyInstance> {
   });
 
   // Register routes
+  await app.register(healthRoutes);
   await app.register(pdfRoutes);
   await app.register(statusRoutes);
   await app.register(settingsRoutes);

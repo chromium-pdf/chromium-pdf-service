@@ -2,7 +2,7 @@
 
 Configure the service using environment variables.
 
-## Available Variables
+## Server Variables
 
 | Variable | Default | Description |
 |----------|---------|-------------|
@@ -13,6 +13,22 @@ Configure the service using environment variables.
 | `SETTINGS_PATH` | `data/settings.json` | Settings file path |
 | `OUTPUT_DIR` | `pdf-files` | PDF output directory |
 | `LOGS_DIR` | `logs` | Process logs directory |
+
+## Security Variables
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `RATE_LIMIT_MAX` | `100` | Max requests per time window |
+| `RATE_LIMIT_WINDOW` | `60000` | Time window in ms (1 minute) |
+| `API_KEYS` | _(empty)_ | Comma-separated API keys for authentication |
+| `ALLOWED_ORIGINS` | _(empty)_ | Comma-separated CORS origins |
+| `ALLOWED_URL_DOMAINS` | _(empty)_ | Comma-separated allowed URL domains |
+| `BLOCK_PRIVATE_IPS` | `true` | Block private IP addresses in URLs |
+| `SANITIZE_HTML` | `false` | Enable HTML sanitization |
+
+::: tip
+See the [Security Guide](/guide/security) for detailed configuration options.
+:::
 
 ## Usage
 

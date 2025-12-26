@@ -38,4 +38,7 @@ features:
   - icon: 🐳
     title: Docker Ready
     details: Production-ready Docker configuration with Chromium
+  - icon: 🔒
+    title: Security Features
+    details: Rate limiting, API authentication, CORS, URL validation, and HTML sanitization
 ---

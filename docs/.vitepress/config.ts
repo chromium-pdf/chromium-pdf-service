@@ -36,6 +36,7 @@ export default defineConfig({
             { text: 'Queue System', link: '/guide/queue' },
             { text: 'File Storage', link: '/guide/file-storage' },
             { text: 'Logging', link: '/guide/logging' },
+            { text: 'Security', link: '/guide/security' },
           ],
         },
       ],

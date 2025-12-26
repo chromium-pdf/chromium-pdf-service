@@ -8,6 +8,7 @@ import { queueManager, QueuedJob } from './queue-manager.js';
 import { generatePdfFilename, generateErrorScreenshotFilename, generateDateFolder } from '../utils/filename.js';
 import { logger } from '../utils/logger.js';
 import { validateUrl } from '../utils/url-validator.js';
+import { sanitizeHtml } from '../utils/html-sanitizer.js';
 
 class PdfGenerator {
   private browser: Browser | null = null;
@@ -322,10 +323,13 @@ class PdfGenerator {
       priority?: number;
     }
   ): Promise<PdfJob> {
+    // Sanitize HTML to prevent XSS
+    const sanitizedHtml = sanitizeHtml(html);
+
     return queueManager.addJob({
       requestedKey,
       type: 'html',
-      source: html,
+      source: sanitizedHtml,
       priority: options?.priority ?? 5,
       options: {
         browser: options?.browser ?? {},
@@ -370,10 +374,13 @@ class PdfGenerator {
       priority?: number;
     }
   ): Promise<PdfJob> {
+    // Sanitize HTML to prevent XSS
+    const sanitizedHtml = sanitizeHtml(htmlContent);
+
     return queueManager.addJob({
       requestedKey,
       type: 'file',
-      source: htmlContent,
+      source: sanitizedHtml,
       priority: options?.priority ?? 5,
       options: {
         browser: options?.browser ?? {},

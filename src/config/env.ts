@@ -20,6 +20,8 @@ export const env = {
     ? process.env.ALLOWED_URL_DOMAINS.split(',').map((d) => d.trim())
     : [],
   blockPrivateIps: process.env.BLOCK_PRIVATE_IPS !== 'false',
+  // HTML Sanitization
+  sanitizeHtml: process.env.SANITIZE_HTML === 'true',
 } as const;
 
 export const isDevelopment = env.nodeEnv === 'development';

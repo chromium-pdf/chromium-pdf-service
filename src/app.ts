@@ -32,9 +32,9 @@ export async function buildApp(): Promise<FastifyInstance> {
 
   // Register CORS
   await app.register(cors, {
-    origin: true,
+    origin: env.allowedOrigins.length > 0 ? env.allowedOrigins : true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    credentials: true,
+    credentials: env.allowedOrigins.length > 0,
   });
 
   // Register Rate Limiting

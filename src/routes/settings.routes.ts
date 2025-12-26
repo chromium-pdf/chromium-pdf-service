@@ -5,7 +5,25 @@ import { ZodError } from 'zod';
 
 export async function settingsRoutes(app: FastifyInstance): Promise<void> {
   // GET /api/settings - Get current settings
-  app.get('/api/settings', async (_request: FastifyRequest, reply: FastifyReply) => {
+  app.get('/api/settings', {
+    schema: {
+      description: 'Get current service settings',
+      tags: ['Settings'],
+      response: {
+        200: {
+          description: 'Current settings',
+          type: 'object',
+          additionalProperties: true,
+          properties: {
+            browser: { type: 'object', additionalProperties: true },
+            pdf: { type: 'object', additionalProperties: true },
+            queue: { type: 'object', additionalProperties: true },
+            storage: { type: 'object', additionalProperties: true },
+          },
+        },
+      },
+    },
+  }, async (_request: FastifyRequest, reply: FastifyReply) => {
     const settings = settingsManager.get();
     return reply.send(settings);
   });
@@ -13,6 +31,42 @@ export async function settingsRoutes(app: FastifyInstance): Promise<void> {
   // PUT /api/settings - Update settings
   app.put(
     '/api/settings',
+    {
+      schema: {
+        description: 'Update service settings',
+        tags: ['Settings'],
+        body: {
+          type: 'object',
+          additionalProperties: true,
+          properties: {
+            browser: { type: 'object', description: 'Browser settings' },
+            pdf: { type: 'object', description: 'PDF generation settings' },
+            queue: { type: 'object', description: 'Queue settings' },
+            storage: { type: 'object', description: 'Storage settings' },
+          },
+        },
+        response: {
+          200: {
+            description: 'Settings updated successfully',
+            type: 'object',
+            additionalProperties: true,
+            properties: {
+              message: { type: 'string' },
+              settings: {
+                type: 'object',
+                additionalProperties: true,
+                properties: {
+                  browser: { type: 'object', additionalProperties: true },
+                  pdf: { type: 'object', additionalProperties: true },
+                  queue: { type: 'object', additionalProperties: true },
+                  storage: { type: 'object', additionalProperties: true },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
     async (request: FastifyRequest<{ Body: SettingsUpdate }>, reply: FastifyReply) => {
       try {
         const body = settingsUpdateSchema.parse(request.body);
@@ -36,7 +90,32 @@ export async function settingsRoutes(app: FastifyInstance): Promise<void> {
   );
 
   // POST /api/settings/reset - Reset settings to defaults
-  app.post('/api/settings/reset', async (_request: FastifyRequest, reply: FastifyReply) => {
+  app.post('/api/settings/reset', {
+    schema: {
+      description: 'Reset all settings to their default values',
+      tags: ['Settings'],
+      response: {
+        200: {
+          description: 'Settings reset successfully',
+          type: 'object',
+          additionalProperties: true,
+          properties: {
+            message: { type: 'string' },
+            settings: {
+              type: 'object',
+              additionalProperties: true,
+              properties: {
+                browser: { type: 'object', additionalProperties: true },
+                pdf: { type: 'object', additionalProperties: true },
+                queue: { type: 'object', additionalProperties: true },
+                storage: { type: 'object', additionalProperties: true },
+              },
+            },
+          },
+        },
+      },
+    },
+  }, async (_request: FastifyRequest, reply: FastifyReply) => {
     const defaultSettings = await settingsManager.reset();
 
     return reply.send({

@@ -10,6 +10,44 @@ export async function statusRoutes(app: FastifyInstance): Promise<void> {
   // GET /api/pdf/status/:requestedKey - Get job status
   app.get(
     '/api/pdf/status/:requestedKey',
+    {
+      schema: {
+        description: 'Get the status of a PDF generation job',
+        tags: ['Status'],
+        params: {
+          type: 'object',
+          required: ['requestedKey'],
+          properties: {
+            requestedKey: { type: 'string', description: 'The unique job identifier' },
+          },
+        },
+        response: {
+          200: {
+            description: 'Job status',
+            type: 'object',
+            additionalProperties: true,
+            properties: {
+              requestedKey: { type: 'string' },
+              status: { type: 'string' },
+              progress: { type: 'number' },
+              createdAt: { type: 'string' },
+              updatedAt: { type: 'string' },
+              filePath: { type: 'string' },
+              error: { type: 'string' },
+            },
+          },
+          404: {
+            description: 'Job not found',
+            type: 'object',
+            additionalProperties: true,
+            properties: {
+              error: { type: 'string' },
+              requestedKey: { type: 'string' },
+            },
+          },
+        },
+      },
+    },
     async (request: FastifyRequest<{ Params: StatusParams }>, reply: FastifyReply) => {
       try {
         const params = statusParamsSchema.parse(request.params);
@@ -39,6 +77,51 @@ export async function statusRoutes(app: FastifyInstance): Promise<void> {
   // DELETE /api/pdf/cancel/:requestedKey - Cancel a job
   app.delete(
     '/api/pdf/cancel/:requestedKey',
+    {
+      schema: {
+        description: 'Cancel a pending PDF generation job',
+        tags: ['Status'],
+        params: {
+          type: 'object',
+          required: ['requestedKey'],
+          properties: {
+            requestedKey: { type: 'string', description: 'The unique job identifier' },
+          },
+        },
+        response: {
+          200: {
+            description: 'Job cancelled successfully',
+            type: 'object',
+            additionalProperties: true,
+            properties: {
+              message: { type: 'string' },
+              requestedKey: { type: 'string' },
+              status: { type: 'string' },
+            },
+          },
+          404: {
+            description: 'Job not found',
+            type: 'object',
+            additionalProperties: true,
+            properties: {
+              error: { type: 'string' },
+              requestedKey: { type: 'string' },
+            },
+          },
+          409: {
+            description: 'Job cannot be cancelled',
+            type: 'object',
+            additionalProperties: true,
+            properties: {
+              error: { type: 'string' },
+              requestedKey: { type: 'string' },
+              status: { type: 'string' },
+              message: { type: 'string' },
+            },
+          },
+        },
+      },
+    },
     async (request: FastifyRequest<{ Params: StatusParams }>, reply: FastifyReply) => {
       try {
         const params = statusParamsSchema.parse(request.params);
@@ -83,6 +166,47 @@ export async function statusRoutes(app: FastifyInstance): Promise<void> {
   // GET /api/pdf/download/:requestedKey - Download generated PDF
   app.get(
     '/api/pdf/download/:requestedKey',
+    {
+      schema: {
+        description: 'Download the generated PDF file',
+        tags: ['Status'],
+        params: {
+          type: 'object',
+          required: ['requestedKey'],
+          properties: {
+            requestedKey: { type: 'string', description: 'The unique job identifier' },
+          },
+        },
+        response: {
+          200: {
+            description: 'PDF file',
+            type: 'string',
+            format: 'binary',
+          },
+          404: {
+            description: 'Job or file not found',
+            type: 'object',
+            additionalProperties: true,
+            properties: {
+              error: { type: 'string' },
+              requestedKey: { type: 'string' },
+              message: { type: 'string' },
+            },
+          },
+          409: {
+            description: 'PDF not ready',
+            type: 'object',
+            additionalProperties: true,
+            properties: {
+              error: { type: 'string' },
+              requestedKey: { type: 'string' },
+              status: { type: 'string' },
+              message: { type: 'string' },
+            },
+          },
+        },
+      },
+    },
     async (request: FastifyRequest<{ Params: StatusParams }>, reply: FastifyReply) => {
       try {
         const params = statusParamsSchema.parse(request.params);
@@ -137,7 +261,27 @@ export async function statusRoutes(app: FastifyInstance): Promise<void> {
   );
 
   // GET /api/pdf/queue - Get queue statistics
-  app.get('/api/pdf/queue', async (_request: FastifyRequest, reply: FastifyReply) => {
+  app.get('/api/pdf/queue', {
+    schema: {
+      description: 'Get queue statistics',
+      tags: ['Status'],
+      response: {
+        200: {
+          description: 'Queue statistics',
+          type: 'object',
+          additionalProperties: true,
+          properties: {
+            queued: { type: 'number' },
+            processing: { type: 'number' },
+            completed: { type: 'number' },
+            failed: { type: 'number' },
+            cancelled: { type: 'number' },
+            total: { type: 'number' },
+          },
+        },
+      },
+    },
+  }, async (_request: FastifyRequest, reply: FastifyReply) => {
     const stats = queueManager.getQueueStats();
     return reply.send(stats);
   });

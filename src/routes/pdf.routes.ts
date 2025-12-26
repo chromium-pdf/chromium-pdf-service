@@ -35,7 +35,54 @@ export async function pdfRoutes(app: FastifyInstance): Promise<void> {
   });
 
   // POST /api/pdf/from-html - Generate PDF from HTML content
-  app.post('/api/pdf/from-html', async (request: FastifyRequest, reply: FastifyReply) => {
+  app.post('/api/pdf/from-html', {
+    schema: {
+      description: 'Generate PDF from HTML content',
+      tags: ['PDF'],
+      body: {
+        type: 'object',
+        properties: {
+          requestedKey: { type: 'string', description: 'Unique identifier for the PDF job' },
+          html: { type: 'string', description: 'HTML content to convert to PDF' },
+          reCreate: { type: 'boolean', description: 'Force recreate PDF if already exists' },
+          options: {
+            type: 'object',
+            properties: {
+              browser: { type: 'object', description: 'Browser options' },
+              pdf: { type: 'object', description: 'PDF options' },
+              queue: { type: 'object', properties: { priority: { type: 'number' } } },
+            },
+          },
+        },
+      },
+      response: {
+        202: {
+          description: 'Job queued successfully',
+          type: 'object',
+          additionalProperties: true,
+          properties: {
+            message: { type: 'string' },
+            requestedKey: { type: 'string' },
+            status: { type: 'string' },
+            createdAt: { type: 'string' },
+          },
+        },
+        200: {
+          description: 'PDF already exists',
+          type: 'object',
+          additionalProperties: true,
+          properties: {
+            message: { type: 'string' },
+            requestedKey: { type: 'string' },
+            status: { type: 'string' },
+            filePath: { type: 'string' },
+            createdAt: { type: 'string' },
+            updatedAt: { type: 'string' },
+          },
+        },
+      },
+    },
+  }, async (request: FastifyRequest, reply: FastifyReply) => {
     try {
       const body = htmlPdfRequestSchema.parse(request.body);
 
@@ -87,7 +134,54 @@ export async function pdfRoutes(app: FastifyInstance): Promise<void> {
   });
 
   // POST /api/pdf/from-url - Generate PDF from URL
-  app.post('/api/pdf/from-url', async (request: FastifyRequest, reply: FastifyReply) => {
+  app.post('/api/pdf/from-url', {
+    schema: {
+      description: 'Generate PDF from a URL',
+      tags: ['PDF'],
+      body: {
+        type: 'object',
+        properties: {
+          requestedKey: { type: 'string', description: 'Unique identifier for the PDF job' },
+          url: { type: 'string', format: 'uri', description: 'URL to convert to PDF' },
+          reCreate: { type: 'boolean', description: 'Force recreate PDF if already exists' },
+          options: {
+            type: 'object',
+            properties: {
+              browser: { type: 'object', description: 'Browser options' },
+              pdf: { type: 'object', description: 'PDF options' },
+              queue: { type: 'object', properties: { priority: { type: 'number' } } },
+            },
+          },
+        },
+      },
+      response: {
+        202: {
+          description: 'Job queued successfully',
+          type: 'object',
+          additionalProperties: true,
+          properties: {
+            message: { type: 'string' },
+            requestedKey: { type: 'string' },
+            status: { type: 'string' },
+            createdAt: { type: 'string' },
+          },
+        },
+        200: {
+          description: 'PDF already exists',
+          type: 'object',
+          additionalProperties: true,
+          properties: {
+            message: { type: 'string' },
+            requestedKey: { type: 'string' },
+            status: { type: 'string' },
+            filePath: { type: 'string' },
+            createdAt: { type: 'string' },
+            updatedAt: { type: 'string' },
+          },
+        },
+      },
+    },
+  }, async (request: FastifyRequest, reply: FastifyReply) => {
     try {
       // Log raw request body for debugging
       logger.info({ rawBody: request.body }, 'Raw request body received');
@@ -141,7 +235,39 @@ export async function pdfRoutes(app: FastifyInstance): Promise<void> {
   });
 
   // POST /api/pdf/from-file - Generate PDF from uploaded HTML file
-  app.post('/api/pdf/from-file', async (request: FastifyRequest, reply: FastifyReply) => {
+  app.post('/api/pdf/from-file', {
+    schema: {
+      description: 'Generate PDF from an uploaded HTML file',
+      tags: ['PDF'],
+      consumes: ['multipart/form-data'],
+      response: {
+        202: {
+          description: 'Job queued successfully',
+          type: 'object',
+          additionalProperties: true,
+          properties: {
+            message: { type: 'string' },
+            requestedKey: { type: 'string' },
+            status: { type: 'string' },
+            createdAt: { type: 'string' },
+          },
+        },
+        200: {
+          description: 'PDF already exists',
+          type: 'object',
+          additionalProperties: true,
+          properties: {
+            message: { type: 'string' },
+            requestedKey: { type: 'string' },
+            status: { type: 'string' },
+            filePath: { type: 'string' },
+            createdAt: { type: 'string' },
+            updatedAt: { type: 'string' },
+          },
+        },
+      },
+    },
+  }, async (request: FastifyRequest, reply: FastifyReply) => {
     try {
       const data = await request.file();
 

@@ -1,5 +1,7 @@
 import Fastify, { FastifyInstance } from 'fastify';
 import cors from '@fastify/cors';
+import fastifySwagger from '@fastify/swagger';
+import fastifySwaggerUi from '@fastify/swagger-ui';
 import { isDevelopment } from './config/env.js';
 import { pdfRoutes } from './routes/pdf.routes.js';
 import { statusRoutes } from './routes/status.routes.js';
@@ -30,6 +32,42 @@ export async function buildApp(): Promise<FastifyInstance> {
   await app.register(cors, {
     origin: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  });
+
+  // Register Swagger
+  await app.register(fastifySwagger, {
+    openapi: {
+      openapi: '3.0.0',
+      info: {
+        title: 'Chromium PDF Service',
+        description: 'PDF generation service built with Fastify, TypeScript, and Playwright',
+        version: '1.0.0',
+        license: {
+          name: 'MIT',
+          url: 'https://opensource.org/licenses/MIT',
+        },
+      },
+      servers: [
+        {
+          url: 'http://localhost:3000',
+          description: 'Development server',
+        },
+      ],
+      tags: [
+        { name: 'PDF', description: 'PDF generation endpoints' },
+        { name: 'Status', description: 'Job status endpoints' },
+        { name: 'Settings', description: 'Service settings endpoints' },
+        { name: 'Health', description: 'Health check endpoints' },
+      ],
+    },
+  });
+
+  await app.register(fastifySwaggerUi, {
+    routePrefix: '/docs',
+    uiConfig: {
+      docExpansion: 'list',
+      deepLinking: true,
+    },
   });
 
   // Register routes

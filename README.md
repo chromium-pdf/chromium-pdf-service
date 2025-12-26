@@ -10,7 +10,7 @@ A simple PDF generation service built with Fastify, TypeScript, Playwright, and 
 
 📖 **[Documentation](https://relliv.github.io/chromium-pdf-service/)**
 
-## Features
+## ✨ Features
 
 - Generate PDFs from HTML, URLs, or uploaded files
 - Queue system with priority, status tracking, and persistence
@@ -20,7 +20,7 @@ A simple PDF generation service built with Fastify, TypeScript, Playwright, and 
 - Error screenshots for debugging
 - Docker ready with health checks
 
-## Quick Start
+## 🚀 Quick Start
 
 ```bash
 # Using Docker Compose
@@ -32,7 +32,7 @@ npx playwright install chromium
 npm run dev
 ```
 
-## API Example
+## 📡 API Example
 
 ```bash
 curl -X POST http://localhost:3000/api/pdf/from-url \
@@ -46,13 +46,13 @@ curl -X POST http://localhost:3000/api/pdf/from-url \
   }'
 ```
 
-## Documentation
+## 📚 Documentation
 
 - [Getting Started](https://relliv.github.io/chromium-pdf-service/guide/getting-started)
 - [API Reference](https://relliv.github.io/chromium-pdf-service/api/endpoints)
 - [Configuration](https://relliv.github.io/chromium-pdf-service/config/settings)
 - [Docker Setup](https://relliv.github.io/chromium-pdf-service/guide/docker)
 
-## License
+## 📄 License
 
 MIT

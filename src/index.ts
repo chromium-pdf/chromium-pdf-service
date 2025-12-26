@@ -1,6 +1,6 @@
 import { buildApp } from './app.js';
 import { logger } from './utils/logger.js';
-import { env } from './config/env.js';
+import { env, isDevelopment } from './config/env.js';
 import { settingsManager } from './services/settings-manager.js';
 import { pdfGenerator } from './services/pdf-generator.js';
 
@@ -16,7 +16,9 @@ async function start(): Promise<void> {
   try {
     await app.listen({ port: env.port, host: env.host });
     logger.info(`Server is running on http://${env.host}:${env.port}`);
-    logger.info(`API documentation available at http://${env.host}:${env.port}/docs`);
+    if (isDevelopment) {
+      logger.info(`API documentation available at http://${env.host}:${env.port}/docs`);
+    }
   } catch (err) {
     logger.error(err, 'Failed to start server');
     process.exit(1);

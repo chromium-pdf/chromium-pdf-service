@@ -35,41 +35,43 @@ export async function buildApp(): Promise<FastifyInstance> {
     credentials: true,
   });
 
-  // Register Swagger
-  await app.register(fastifySwagger, {
-    openapi: {
-      openapi: '3.0.0',
-      info: {
-        title: 'Chromium PDF Service',
-        description: 'PDF generation service built with Fastify, TypeScript, and Playwright',
-        version: '1.0.0',
-        license: {
-          name: 'MIT',
-          url: 'https://opensource.org/licenses/MIT',
+  // Register Swagger (development only)
+  if (isDevelopment) {
+    await app.register(fastifySwagger, {
+      openapi: {
+        openapi: '3.0.0',
+        info: {
+          title: 'Chromium PDF Service',
+          description: 'PDF generation service built with Fastify, TypeScript, and Playwright',
+          version: '1.0.0',
+          license: {
+            name: 'MIT',
+            url: 'https://opensource.org/licenses/MIT',
+          },
         },
+        servers: [
+          {
+            url: `http://localhost:${env.port}`,
+            description: 'Development server',
+          },
+        ],
+        tags: [
+          { name: 'PDF', description: 'PDF generation endpoints' },
+          { name: 'Status', description: 'Job status endpoints' },
+          { name: 'Settings', description: 'Service settings endpoints' },
+          { name: 'Health', description: 'Health check endpoints' },
+        ],
       },
-      servers: [
-        {
-          url: `http://localhost:${env.port}`,
-          description: 'Development server',
-        },
-      ],
-      tags: [
-        { name: 'PDF', description: 'PDF generation endpoints' },
-        { name: 'Status', description: 'Job status endpoints' },
-        { name: 'Settings', description: 'Service settings endpoints' },
-        { name: 'Health', description: 'Health check endpoints' },
-      ],
-    },
-  });
+    });
 
-  await app.register(fastifySwaggerUi, {
-    routePrefix: '/docs',
-    uiConfig: {
-      docExpansion: 'list',
-      deepLinking: true,
-    },
-  });
+    await app.register(fastifySwaggerUi, {
+      routePrefix: '/docs',
+      uiConfig: {
+        docExpansion: 'list',
+        deepLinking: true,
+      },
+    });
+  }
 
   // Register routes
   await app.register(healthRoutes);

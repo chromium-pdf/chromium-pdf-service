@@ -22,24 +22,38 @@ dist
 
 # Documentation
 *.md
-!README.md
 
 # Test files
+tests
 *.test.ts
 *.spec.ts
 __tests__
 coverage
+vitest.config.ts
 
 # Logs
 logs
 *.log
 npm-debug.log*
+pnpm-debug.log*
 
 # Generated files
-pdf-files/*.pdf
+pdf-files
 data/settings.json
+data/queue.json
+
+# Playwright cache
+test-results
+playwright-report
+blob-report
+playwright/.cache
 
 # Docker
 Dockerfile
 docker-compose.yml
 .dockerignore
+
+# Misc
+*.tgz
+.npm
+LICENSE

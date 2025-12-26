@@ -1,5 +1,9 @@
 # API Endpoints
 
+::: tip Interactive API Documentation
+Swagger UI is available at `/docs` in development mode. You can explore and test all endpoints interactively.
+:::
+
 ## PDF Generation
 
 ### Generate PDF from HTML

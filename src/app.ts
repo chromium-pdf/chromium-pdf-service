@@ -1,5 +1,6 @@
 import Fastify, { FastifyInstance } from 'fastify';
 import cors from '@fastify/cors';
+import rateLimit from '@fastify/rate-limit';
 import fastifySwagger from '@fastify/swagger';
 import fastifySwaggerUi from '@fastify/swagger-ui';
 import { env, isDevelopment } from './config/env.js';
@@ -33,6 +34,25 @@ export async function buildApp(): Promise<FastifyInstance> {
     origin: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     credentials: true,
+  });
+
+  // Register Rate Limiting
+  await app.register(rateLimit, {
+    max: env.rateLimitMax,
+    timeWindow: env.rateLimitWindow,
+    keyGenerator: (request) => request.ip,
+    skipOnError: false,
+    addHeadersOnExceeding: {
+      'x-ratelimit-limit': true,
+      'x-ratelimit-remaining': true,
+      'x-ratelimit-reset': true,
+    },
+    addHeaders: {
+      'x-ratelimit-limit': true,
+      'x-ratelimit-remaining': true,
+      'x-ratelimit-reset': true,
+      'retry-after': true,
+    },
   });
 
   // Register Swagger (development only)

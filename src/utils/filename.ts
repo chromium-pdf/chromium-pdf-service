@@ -44,6 +44,53 @@ export function generateErrorScreenshotFilename(requestedKey: string, date: Date
 }
 
 /**
+ * Generate a filename for screenshot files
+ * Format: {requestedKey}__{day}-{month}-{year}_{hour}-{minute}-{second}.{extension}
+ * Note: Files are stored in dd-mm-yyyy date folders
+ */
+export function generateScreenshotFilename(
+  requestedKey: string,
+  format: 'png' | 'jpeg',
+  date: Date = new Date()
+): string {
+  const extension = format === 'jpeg' ? 'jpg' : 'png';
+  return `${requestedKey}__${generateTimestamp(date)}.${extension}`;
+}
+
+/**
+ * Parse a screenshot filename to extract requestedKey, format, and timestamp
+ * @param filename - The screenshot filename (e.g., "my-key__25-12-2025_14-30-45.png")
+ */
+export function parseScreenshotFilename(filename: string): {
+  requestedKey: string;
+  format: 'png' | 'jpeg';
+  timestamp: Date;
+} | null {
+  const match = filename.match(/^(.+)__(\d{2})-(\d{2})-(\d{4})_(\d{2})-(\d{2})-(\d{2})\.(png|jpg)$/);
+
+  if (!match) return null;
+
+  const [, requestedKey, day, month, year, hour, minute, second, ext] = match;
+
+  if (!requestedKey || !day || !month || !year || !hour || !minute || !second || !ext) {
+    return null;
+  }
+
+  return {
+    requestedKey,
+    format: ext === 'jpg' ? 'jpeg' : 'png',
+    timestamp: new Date(
+      parseInt(year, 10),
+      parseInt(month, 10) - 1,
+      parseInt(day, 10),
+      parseInt(hour, 10),
+      parseInt(minute, 10),
+      parseInt(second, 10)
+    ),
+  };
+}
+
+/**
  * Parse a PDF filename to extract requestedKey and timestamp
  * @param filename - The PDF filename (e.g., "my-key__25-12-2025_14-30-45.pdf")
  */

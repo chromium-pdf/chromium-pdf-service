@@ -6,6 +6,7 @@ import fastifySwagger from '@fastify/swagger';
 import fastifySwaggerUi from '@fastify/swagger-ui';
 import { env, isDevelopment } from './config/env.js';
 import { pdfRoutes } from './routes/pdf.routes.js';
+import { screenshotRoutes } from './routes/screenshot.routes.js';
 import { statusRoutes } from './routes/status.routes.js';
 import { settingsRoutes } from './routes/settings.routes.js';
 import { healthRoutes } from './routes/health.routes.js';
@@ -89,6 +90,7 @@ export async function buildApp(): Promise<FastifyInstance> {
         ],
         tags: [
           { name: 'PDF', description: 'PDF generation endpoints' },
+          { name: 'Screenshot', description: 'Screenshot generation endpoints (PNG/JPEG)' },
           { name: 'Status', description: 'Job status endpoints' },
           { name: 'Settings', description: 'Service settings endpoints' },
           { name: 'Health', description: 'Health check endpoints' },
@@ -108,6 +110,7 @@ export async function buildApp(): Promise<FastifyInstance> {
   // Register routes
   await app.register(healthRoutes);
   await app.register(pdfRoutes);
+  await app.register(screenshotRoutes);
   await app.register(statusRoutes);
   await app.register(settingsRoutes);
 

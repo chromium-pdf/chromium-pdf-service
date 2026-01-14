@@ -39,6 +39,24 @@ export interface PdfOptions {
   displayHeaderFooter?: boolean;
 }
 
+// Screenshot Options
+export interface ScreenshotOptions {
+  type?: 'png' | 'jpeg';
+  quality?: number; // 0-100, only for jpeg
+  fullPage?: boolean;
+  clip?: {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+  };
+  omitBackground?: boolean; // transparent background for PNG
+  scale?: 'css' | 'device';
+}
+
+// Output format type
+export type OutputFormat = 'pdf' | 'png' | 'jpeg';
+
 // Queue Options
 export interface QueueOptions {
   priority?: number;
@@ -64,6 +82,26 @@ export interface UrlPdfRequest extends PdfGenerationRequest {
   url: string;
 }
 
+// Screenshot Generation Request
+export interface ScreenshotGenerationRequest {
+  requestedKey: string;
+  options?: {
+    browser?: BrowserOptions;
+    screenshot?: ScreenshotOptions;
+    queue?: QueueOptions;
+  };
+}
+
+// HTML Screenshot Request
+export interface HtmlScreenshotRequest extends ScreenshotGenerationRequest {
+  html: string;
+}
+
+// URL Screenshot Request
+export interface UrlScreenshotRequest extends ScreenshotGenerationRequest {
+  url: string;
+}
+
 // PDF Job
 export interface PdfJob {
   requestedKey: string;
@@ -79,6 +117,24 @@ export interface PdfJob {
   options: {
     browser: BrowserOptions;
     pdf: PdfOptions;
+  };
+}
+
+// Screenshot Job
+export interface ScreenshotJob {
+  requestedKey: string;
+  type: 'html' | 'url' | 'file';
+  source: string;
+  status: JobStatus;
+  progress: number;
+  priority: number;
+  createdAt: Date;
+  updatedAt: Date;
+  filePath?: string;
+  error?: string;
+  options: {
+    browser: BrowserOptions;
+    screenshot: ScreenshotOptions;
   };
 }
 

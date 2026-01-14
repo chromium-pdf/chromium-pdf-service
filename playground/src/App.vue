@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, watch, onMounted } from 'vue'
 import axios from 'axios'
+import OptionsPanel from './components/OptionsPanel.vue'
 
 const STORAGE_KEY = 'pdf-playground-server'
 const POLL_INTERVAL = 500
@@ -38,6 +39,8 @@ const error = ref('')
 const result = ref<{ url: string; type: string } | null>(null)
 const isDark = ref(false)
 const jobState = ref<JobState | null>(null)
+const showOptions = ref(false)
+const optionsPanelRef = ref<InstanceType<typeof OptionsPanel> | null>(null)
 
 const baseUrl = () => serverUrl.value.replace(/\/$/, '')
 
@@ -113,10 +116,11 @@ const generateOutput = async () => {
     const path = conversionType.value === 'html' ? `${base}/from-html` : `${base}/from-url`
     const endpoint = `${baseUrl()}${path}`
 
+    const options = optionsPanelRef.value?.buildRequestOptions() ?? {}
     const payload =
       conversionType.value === 'html'
-        ? { requestedKey, html: htmlContent.value, reCreate: true }
-        : { requestedKey, url: urlInput.value, reCreate: true }
+        ? { requestedKey, html: htmlContent.value, reCreate: true, options }
+        : { requestedKey, url: urlInput.value, reCreate: true, options }
 
     const queueResponse = await axios.post(endpoint, payload)
     jobState.value = {
@@ -214,6 +218,14 @@ const generateOutput = async () => {
           <label>URL</label>
           <input v-model="urlInput" type="url" placeholder="https://example.com" />
         </div>
+      </section>
+
+      <section class="options-section">
+        <button class="options-toggle" @click="showOptions = !showOptions">
+          <span class="options-toggle-icon">{{ showOptions ? '▼' : '▶' }}</span>
+          Options
+        </button>
+        <OptionsPanel v-show="showOptions" ref="optionsPanelRef" :output-format="outputFormat" />
       </section>
 
       <button class="generate-btn" @click="generateOutput" :disabled="isLoading">
@@ -381,6 +393,34 @@ main {
 
 .input-section {
   margin-bottom: 1.5rem;
+}
+
+.options-section {
+  margin-bottom: 1.5rem;
+}
+
+.options-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-secondary);
+  color: var(--text);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.options-toggle:hover {
+  background: var(--border);
+}
+
+.options-toggle-icon {
+  font-size: 0.625rem;
+  color: var(--text-secondary);
 }
 
 .input-wrapper {

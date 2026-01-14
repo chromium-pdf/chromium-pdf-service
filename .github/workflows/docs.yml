@@ -3,6 +3,10 @@ name: 📜 Deploy Docs
 on:
   push:
     branches: [main]
+    paths:
+      - "docs/**"
+      - "package.json"
+      - "package-lock.json"
   workflow_dispatch:
 
 permissions:

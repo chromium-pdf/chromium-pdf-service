@@ -1,4 +1,6 @@
 import { defineConfig } from 'vitepress';
+import llmstxt from 'vitepress-plugin-llms';
+import { copyOrDownloadAsMarkdownButtons } from 'vitepress-plugin-llms';
 
 export default defineConfig({
   title: 'Chromium PDF Service',
@@ -6,6 +8,16 @@ export default defineConfig({
   base: '/chromium-pdf-service/',
 
   head: [['link', { rel: 'icon', type: 'image/svg+xml', href: 'https://fav.farm/📜' }]],
+
+  vite: {
+    plugins: [llmstxt()],
+  },
+
+  markdown: {
+    config(md) {
+      md.use(copyOrDownloadAsMarkdownButtons);
+    },
+  },
 
   themeConfig: {
     logo: 'https://fav.farm/📜',

@@ -1,5 +1,8 @@
 import { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
 import multipart from '@fastify/multipart';
+import { createReadStream, existsSync } from 'node:fs';
+import { stat } from 'node:fs/promises';
+import { basename } from 'node:path';
 import { screenshotGenerator } from '../services/screenshot-generator.js';
 import { screenshotQueueManager } from '../services/screenshot-queue-manager.js';
 import { htmlScreenshotRequestSchema, urlScreenshotRequestSchema } from '../schemas/screenshot.schema.js';
@@ -409,6 +412,98 @@ export async function screenshotRoutes(app: FastifyInstance): Promise<void> {
     }
 
     return reply.send(jobStatus);
+  });
+
+  // GET /api/screenshot/download/:requestedKey - Download generated screenshot
+  app.get('/api/screenshot/download/:requestedKey', {
+    schema: {
+      description: 'Download the generated screenshot file',
+      tags: ['Screenshot'],
+      params: {
+        type: 'object',
+        properties: {
+          requestedKey: { type: 'string' },
+        },
+        required: ['requestedKey'],
+      },
+      response: {
+        200: {
+          description: 'Screenshot file',
+          type: 'string',
+          format: 'binary',
+        },
+        404: {
+          description: 'Job or file not found',
+          type: 'object',
+          additionalProperties: true,
+          properties: {
+            error: { type: 'string' },
+            requestedKey: { type: 'string' },
+            message: { type: 'string' },
+          },
+        },
+        409: {
+          description: 'Screenshot not ready',
+          type: 'object',
+          additionalProperties: true,
+          properties: {
+            error: { type: 'string' },
+            requestedKey: { type: 'string' },
+            status: { type: 'string' },
+            message: { type: 'string' },
+          },
+        },
+      },
+    },
+  }, async (request: FastifyRequest<{ Params: { requestedKey: string } }>, reply: FastifyReply) => {
+    const { requestedKey } = request.params;
+    const job = screenshotQueueManager.getJobStatus(requestedKey);
+
+    if (!job) {
+      return reply.status(404).send({
+        error: 'Job not found',
+        requestedKey,
+      });
+    }
+
+    if (job.status !== 'completed') {
+      return reply.status(409).send({
+        error: 'Screenshot not ready',
+        requestedKey,
+        status: job.status,
+        message:
+          job.status === 'failed'
+            ? `Screenshot generation failed: ${job.error}`
+            : `Screenshot is still ${job.status}`,
+      });
+    }
+
+    if (!job.filePath) {
+      return reply.status(404).send({
+        error: 'Screenshot file not found',
+        requestedKey,
+        message: 'The screenshot file path is missing',
+      });
+    }
+
+    if (!existsSync(job.filePath)) {
+      return reply.status(404).send({
+        error: 'Screenshot file not found',
+        requestedKey,
+        message: 'The screenshot file may have been deleted',
+      });
+    }
+
+    const fileStats = await stat(job.filePath);
+    const filename = basename(job.filePath);
+    const ext = filename.split('.').pop()?.toLowerCase() || 'png';
+    const mimeType = ext === 'jpeg' || ext === 'jpg' ? 'image/jpeg' : 'image/png';
+
+    reply.header('Content-Type', mimeType);
+    reply.header('Content-Disposition', `attachment; filename="${filename}"`);
+    reply.header('Content-Length', fileStats.size);
+
+    return reply.send(createReadStream(job.filePath));
   });
 
   // DELETE /api/screenshot/:requestedKey - Cancel or remove a screenshot job

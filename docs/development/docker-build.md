@@ -270,9 +270,35 @@ services:
 
 ## CI/CD Integration
 
-### GitHub Actions Example
+### Automated Publishing
+
+This project uses GitHub Actions to automatically build and publish Docker images to GitHub Container Registry (ghcr.io).
+
+**Workflow:**
+1. Push a version tag (e.g., `git tag v1.0.0 && git push --tags`)
+2. Tests workflow runs automatically
+3. On test success, Docker image is built for `linux/amd64` and `linux/arm64`
+4. Image is pushed to `ghcr.io/relliv/chromium-pdf-service`
+
+**Versioning:**
+
+| Git Tag | Docker Tags |
+|---------|-------------|
+| `v1.2.3` | `1.2.3`, `1.2`, `1`, `latest` |
+| `v0.0.2-alpha` | `0.0.2-alpha` |
+
+### Manual Trigger
+
+You can also manually trigger a build from GitHub Actions:
+
+1. Go to Actions → "🐳 Publish Docker Image"
+2. Click "Run workflow"
+3. Optionally specify a custom tag
+
+### Local CI Testing
 
 ```yaml
+# Test locally before pushing
 - name: Build Docker image
   run: docker build -t chromium-pdf-service:${{ github.sha }} .
 
@@ -282,4 +308,17 @@ services:
     sleep 5
     curl -f http://localhost:3000/health
     docker stop test
+```
+
+### Creating a Release
+
+```bash
+# Create and push a version tag
+git tag v1.0.0
+git push origin v1.0.0
+
+# The workflow will automatically:
+# 1. Run all tests
+# 2. Build multi-platform image
+# 3. Push to ghcr.io/relliv/chromium-pdf-service:1.0.0
 ```

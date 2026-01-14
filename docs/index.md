@@ -40,7 +40,7 @@ features:
     details: Captures page screenshot on failure for debugging
   - icon: 🐳
     title: Docker Ready
-    details: Production-ready Docker configuration with Chromium
+    details: Pre-built multi-arch images on GitHub Container Registry
   - icon: 🔒
     title: Security Features
     details: Rate limiting, API authentication, CORS, URL validation, and HTML sanitization

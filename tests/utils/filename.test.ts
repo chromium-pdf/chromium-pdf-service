@@ -1,5 +1,11 @@
 import { describe, it, expect } from 'vitest';
-import { generatePdfFilename, generateDateFolder, parsePdfFilename } from '../../src/utils/filename.js';
+import {
+  generatePdfFilename,
+  generateDateFolder,
+  parsePdfFilename,
+  generateScreenshotFilename,
+  parseScreenshotFilename,
+} from '../../src/utils/filename.js';
 
 describe('Filename Utilities', () => {
   describe('generateDateFolder', () => {
@@ -111,6 +117,113 @@ describe('Filename Utilities', () => {
 
       expect(parsed).not.toBeNull();
       expect(parsed?.requestedKey).toBe(originalKey);
+    });
+  });
+
+  describe('generateScreenshotFilename', () => {
+    it('should generate PNG filename with date and time format', () => {
+      const date = new Date('2024-01-15T10:30:45.000Z');
+      const filename = generateScreenshotFilename('screenshot-123', 'png', date);
+
+      expect(filename).toMatch(/^screenshot-123__15-01-2024_\d{2}-30-45\.png$/);
+    });
+
+    it('should generate JPEG filename with .jpg extension', () => {
+      const date = new Date('2024-01-15T10:30:45.000Z');
+      const filename = generateScreenshotFilename('screenshot-123', 'jpeg', date);
+
+      expect(filename).toMatch(/^screenshot-123__15-01-2024_\d{2}-30-45\.jpg$/);
+    });
+
+    it('should use current date/time when not provided', () => {
+      const filename = generateScreenshotFilename('test-key', 'png');
+
+      expect(filename).toMatch(/^test-key__\d{2}-\d{2}-\d{4}_\d{2}-\d{2}-\d{2}\.png$/);
+    });
+
+    it('should handle requestedKey with dashes and underscores', () => {
+      const date = new Date('2024-06-20T15:45:30.000Z');
+      const filename = generateScreenshotFilename('my-test_key-123', 'png', date);
+
+      expect(filename).toContain('my-test_key-123__');
+      expect(filename.endsWith('.png')).toBe(true);
+    });
+  });
+
+  describe('parseScreenshotFilename', () => {
+    it('should parse valid PNG filename correctly', () => {
+      const filename = 'screenshot-123__15-01-2024_10-30-45.png';
+      const result = parseScreenshotFilename(filename);
+
+      expect(result).not.toBeNull();
+      expect(result?.requestedKey).toBe('screenshot-123');
+      expect(result?.format).toBe('png');
+      expect(result?.timestamp).toBeInstanceOf(Date);
+      expect(result?.timestamp.getFullYear()).toBe(2024);
+      expect(result?.timestamp.getMonth()).toBe(0);
+      expect(result?.timestamp.getDate()).toBe(15);
+    });
+
+    it('should parse valid JPEG filename correctly', () => {
+      const filename = 'screenshot-123__15-01-2024_10-30-45.jpg';
+      const result = parseScreenshotFilename(filename);
+
+      expect(result).not.toBeNull();
+      expect(result?.requestedKey).toBe('screenshot-123');
+      expect(result?.format).toBe('jpeg');
+    });
+
+    it('should parse filename with complex requestedKey', () => {
+      const filename = 'my-complex_key-with-123__31-12-2024_23-59-59.png';
+      const result = parseScreenshotFilename(filename);
+
+      expect(result).not.toBeNull();
+      expect(result?.requestedKey).toBe('my-complex_key-with-123');
+    });
+
+    it('should return null for invalid filename format', () => {
+      const invalidFilenames = [
+        'invalid-filename.png',
+        'no-timestamp__.png',
+        'missing__extension',
+        '',
+      ];
+
+      for (const filename of invalidFilenames) {
+        const result = parseScreenshotFilename(filename);
+        expect(result).toBeNull();
+      }
+    });
+
+    it('should return null for unsupported extension', () => {
+      const filename = 'test__15-01-2024_10-30-45.gif';
+      const result = parseScreenshotFilename(filename);
+
+      expect(result).toBeNull();
+    });
+
+    it('should handle roundtrip for PNG (generate then parse)', () => {
+      const originalKey = 'roundtrip-png-test';
+      const originalDate = new Date('2024-06-15T14:30:00.000Z');
+
+      const filename = generateScreenshotFilename(originalKey, 'png', originalDate);
+      const parsed = parseScreenshotFilename(filename);
+
+      expect(parsed).not.toBeNull();
+      expect(parsed?.requestedKey).toBe(originalKey);
+      expect(parsed?.format).toBe('png');
+    });
+
+    it('should handle roundtrip for JPEG (generate then parse)', () => {
+      const originalKey = 'roundtrip-jpeg-test';
+      const originalDate = new Date('2024-06-15T14:30:00.000Z');
+
+      const filename = generateScreenshotFilename(originalKey, 'jpeg', originalDate);
+      const parsed = parseScreenshotFilename(filename);
+
+      expect(parsed).not.toBeNull();
+      expect(parsed?.requestedKey).toBe(originalKey);
+      expect(parsed?.format).toBe('jpeg');
     });
   });
 });

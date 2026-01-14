@@ -247,3 +247,99 @@ Once the status is `completed`, download the PDF:
 ```bash
 curl -O http://localhost:3000/api/pdf/download/invoice-2025-001
 ```
+
+## Screenshot Examples
+
+### 8. Full Page Screenshot
+
+Capture a full webpage as a PNG image.
+
+```bash
+curl -X POST http://localhost:3000/api/screenshot/from-url \
+  -H "Content-Type: application/json" \
+  -d '{
+    "requestedKey": "homepage-screenshot",
+    "url": "https://github.com",
+    "options": {
+      "browser": {
+        "viewport": { "width": 1920, "height": 1080 }
+      },
+      "screenshot": {
+        "type": "png",
+        "fullPage": true
+      }
+    }
+  }'
+```
+
+### 9. JPEG Screenshot with Quality
+
+Generate a compressed JPEG screenshot.
+
+```bash
+curl -X POST http://localhost:3000/api/screenshot/from-url \
+  -H "Content-Type: application/json" \
+  -d '{
+    "requestedKey": "compressed-capture",
+    "url": "https://example.com",
+    "options": {
+      "browser": {
+        "viewport": { "width": 1280, "height": 720 }
+      },
+      "screenshot": {
+        "type": "jpeg",
+        "quality": 80,
+        "fullPage": false
+      }
+    }
+  }'
+```
+
+### 10. Screenshot with Transparent Background
+
+Capture an element with transparent background (PNG only).
+
+```bash
+curl -X POST http://localhost:3000/api/screenshot/from-html \
+  -H "Content-Type: application/json" \
+  -d '{
+    "requestedKey": "transparent-logo",
+    "html": "<!DOCTYPE html><html><head><style>body{margin:0;background:transparent}.logo{width:200px;height:200px;background:linear-gradient(135deg,#667eea,#764ba2);border-radius:20px;display:flex;align-items:center;justify-content:center;color:white;font-size:48px;font-family:system-ui}</style></head><body><div class=\"logo\">LOGO</div></body></html>",
+    "options": {
+      "browser": {
+        "viewport": { "width": 200, "height": 200 }
+      },
+      "screenshot": {
+        "type": "png",
+        "omitBackground": true,
+        "fullPage": false
+      }
+    }
+  }'
+```
+
+### Checking Screenshot Status
+
+```bash
+curl http://localhost:3000/api/screenshot/status/homepage-screenshot
+```
+
+Response:
+
+```json
+{
+  "requestedKey": "homepage-screenshot",
+  "status": "completed",
+  "filePath": "pdf-files/15-01-2025/homepage-screenshot__15-01-2025_10-30-45.png",
+  "createdAt": "2025-01-15T10:30:40.000Z",
+  "updatedAt": "2025-01-15T10:30:45.000Z"
+}
+```
+
+### Downloading the Screenshot
+
+Once the status is `completed`, download the screenshot:
+
+```bash
+curl -O http://localhost:3000/api/screenshot/download/homepage-screenshot
+```

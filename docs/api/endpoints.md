@@ -264,6 +264,23 @@ GET /api/screenshot/status/:requestedKey
 DELETE /api/screenshot/:requestedKey
 ```
 
+### Download Screenshot
+
+```bash
+GET /api/screenshot/download/:requestedKey
+```
+
+Downloads the generated screenshot file. Returns the image with appropriate Content-Type (`image/png` or `image/jpeg`).
+
+**Response Headers:**
+- `Content-Type`: `image/png` or `image/jpeg`
+- `Content-Disposition`: `attachment; filename="<filename>"`
+- `Content-Length`: File size in bytes
+
+**Error Responses:**
+- `404` - Job not found or file not found
+- `409` - Screenshot not ready (still processing or failed)
+
 ## Job Management
 
 ### Get Job Status

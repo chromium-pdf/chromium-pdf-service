@@ -3,6 +3,7 @@
 [![Tests](https://github.com/relliv/chromium-pdf-service/actions/workflows/test.yml/badge.svg)](https://github.com/relliv/chromium-pdf-service/actions/workflows/test.yml)
 [![Docker](https://github.com/relliv/chromium-pdf-service/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/relliv/chromium-pdf-service/actions/workflows/docker-publish.yml)
 [![Docker Image](https://img.shields.io/badge/ghcr.io-chromium--pdf--service-blue?logo=docker)](https://ghcr.io/relliv/chromium-pdf-service)
+[![Image Size](https://ghcr-badge.egpl.dev/relliv/chromium-pdf-service/size)](https://ghcr.io/relliv/chromium-pdf-service)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 A simple PDF and screenshot generation service built with Fastify, TypeScript, Playwright, and Docker.

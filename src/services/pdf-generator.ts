@@ -145,6 +145,7 @@ class PdfGenerator {
       waitForSelector: job.options.browser.waitForSelector,
       waitAfter: job.options.browser.waitAfter,
       disableAnimations: job.options.browser.disableAnimations,
+      colorScheme: job.options.browser.colorScheme,
     };
 
     // If width/height are provided, don't use format (custom dimensions take precedence)
@@ -179,6 +180,11 @@ class PdfGenerator {
 
     const page = await context.newPage();
     page.setDefaultTimeout(browserOptions.timeout ?? 30000);
+
+    // Emulate color scheme if specified
+    if (browserOptions.colorScheme) {
+      await page.emulateMedia({ colorScheme: browserOptions.colorScheme });
+    }
 
     try {
       queueManager.updateJobProgress(job.requestedKey, 10);

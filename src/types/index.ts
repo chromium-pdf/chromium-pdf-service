@@ -18,6 +18,7 @@ export interface BrowserOptions {
   waitForSelector?: string; // CSS selector to wait for before generating PDF
   waitAfter?: number; // Additional wait time (ms) after page load or selector appears
   disableAnimations?: boolean; // Disable all CSS animations and transitions
+  colorScheme?: 'light' | 'dark' | 'no-preference'; // Emulate prefers-color-scheme media feature
 }
 
 // PDF Options

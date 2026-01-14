@@ -13,6 +13,7 @@ Browser options control how the page is loaded and rendered.
 | `waitForSelector` | string | CSS selector to wait for before generating PDF |
 | `waitAfter` | number | Additional wait time (ms) after page load or selector appears (max 60000) |
 | `disableAnimations` | boolean | Disable all CSS animations and transitions |
+| `colorScheme` | string | Emulate preferred color scheme: `"light"`, `"dark"`, or `"no-preference"` |
 
 ## Examples
 
@@ -85,4 +86,32 @@ Browser options control how the page is loaded and rendered.
 
 ::: tip
 Use `disableAnimations: true` when your page has CSS animations that might cause elements to be invisible or transformed when the PDF is captured.
+:::
+
+### Dark Mode
+
+```json
+{
+  "options": {
+    "browser": {
+      "colorScheme": "dark"
+    }
+  }
+}
+```
+
+### Light Mode
+
+```json
+{
+  "options": {
+    "browser": {
+      "colorScheme": "light"
+    }
+  }
+}
+```
+
+::: tip
+The `colorScheme` option emulates the `prefers-color-scheme` CSS media feature. Use `"dark"` to render pages in dark mode, `"light"` for light mode, or `"no-preference"` to use the system default. This is useful for websites that support both light and dark themes.
 :::

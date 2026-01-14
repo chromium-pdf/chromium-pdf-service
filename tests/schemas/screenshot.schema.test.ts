@@ -100,6 +100,25 @@ describe('Screenshot Schemas', () => {
       const result = htmlScreenshotRequestSchema.safeParse(invalidRequest);
       expect(result.success).toBe(false);
     });
+
+    it('should validate request with colorScheme option', () => {
+      const request = {
+        requestedKey: 'dark-mode-screenshot',
+        html: '<html><body>Dark mode content</body></html>',
+        options: {
+          browser: {
+            colorScheme: 'dark',
+          },
+          screenshot: {
+            type: 'png',
+            fullPage: true,
+          },
+        },
+      };
+
+      const result = htmlScreenshotRequestSchema.safeParse(request);
+      expect(result.success).toBe(true);
+    });
   });
 
   describe('urlScreenshotRequestSchema', () => {

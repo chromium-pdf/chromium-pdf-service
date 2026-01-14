@@ -113,6 +113,25 @@ describe('PDF Schemas', () => {
       const result = htmlPdfRequestSchema.safeParse(invalidRequest);
       expect(result.success).toBe(false);
     });
+
+    it('should validate request with colorScheme option', () => {
+      const request = {
+        requestedKey: 'dark-mode-pdf',
+        html: '<html><body>Dark mode content</body></html>',
+        options: {
+          browser: {
+            colorScheme: 'dark',
+          },
+          pdf: {
+            format: 'A4',
+            printBackground: true,
+          },
+        },
+      };
+
+      const result = htmlPdfRequestSchema.safeParse(request);
+      expect(result.success).toBe(true);
+    });
   });
 
   describe('urlPdfRequestSchema', () => {
@@ -262,6 +281,54 @@ describe('PDF Schemas', () => {
 
       const result = browserOptionsSchema.safeParse(options);
       expect(result.success).toBe(false);
+    });
+
+    it('should accept colorScheme "dark"', () => {
+      const options = {
+        colorScheme: 'dark',
+      };
+
+      const result = browserOptionsSchema.safeParse(options);
+      expect(result.success).toBe(true);
+    });
+
+    it('should accept colorScheme "light"', () => {
+      const options = {
+        colorScheme: 'light',
+      };
+
+      const result = browserOptionsSchema.safeParse(options);
+      expect(result.success).toBe(true);
+    });
+
+    it('should accept colorScheme "no-preference"', () => {
+      const options = {
+        colorScheme: 'no-preference',
+      };
+
+      const result = browserOptionsSchema.safeParse(options);
+      expect(result.success).toBe(true);
+    });
+
+    it('should reject invalid colorScheme value', () => {
+      const options = {
+        colorScheme: 'invalid',
+      };
+
+      const result = browserOptionsSchema.safeParse(options);
+      expect(result.success).toBe(false);
+    });
+
+    it('should accept colorScheme with other browser options', () => {
+      const options = {
+        timeout: 30000,
+        viewport: { width: 1920, height: 1080 },
+        colorScheme: 'dark',
+        disableAnimations: true,
+      };
+
+      const result = browserOptionsSchema.safeParse(options);
+      expect(result.success).toBe(true);
     });
   });
 

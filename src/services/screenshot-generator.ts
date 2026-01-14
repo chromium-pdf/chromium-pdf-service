@@ -139,6 +139,7 @@ class ScreenshotGenerator {
       waitForSelector: job.options.browser.waitForSelector,
       waitAfter: job.options.browser.waitAfter,
       disableAnimations: job.options.browser.disableAnimations,
+      colorScheme: job.options.browser.colorScheme,
     };
 
     const screenshotOptions: ScreenshotOptions = {
@@ -159,6 +160,11 @@ class ScreenshotGenerator {
 
     const page = await context.newPage();
     page.setDefaultTimeout(browserOptions.timeout ?? 30000);
+
+    // Emulate color scheme if specified
+    if (browserOptions.colorScheme) {
+      await page.emulateMedia({ colorScheme: browserOptions.colorScheme });
+    }
 
     try {
       screenshotQueueManager.updateJobProgress(job.requestedKey, 10);

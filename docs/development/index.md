@@ -93,7 +93,6 @@ chromium-pdf-service/
 │       └── html-sanitizer.ts
 ├── tests/                    # Test files
 ├── docs/                     # VitePress documentation
-├── playground/               # Vue.js playground app
 ├── data/                     # Runtime data (settings, queue)
 ├── pdf-files/                # Generated PDFs/screenshots
 └── logs/                     # Log files
@@ -127,7 +126,7 @@ npm run test:coverage
 
 ### Test Structure
 
-```
+```txt
 tests/
 ├── routes/           # Route/endpoint tests
 ├── services/         # Service layer tests
@@ -168,7 +167,7 @@ npm run typecheck
 
 Swagger UI is available in development mode:
 
-```
+```txt
 http://localhost:3000/docs
 ```
 
@@ -183,6 +182,7 @@ LOG_LEVEL=debug npm run dev
 ### View Logs
 
 Logs are written to:
+
 - Console (pretty-printed in development)
 - `logs/` directory (JSON format)
 

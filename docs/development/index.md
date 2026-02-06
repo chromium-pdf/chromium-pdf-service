@@ -13,7 +13,7 @@ This guide covers setting up and developing the Chromium PDF Service locally.
 ### 1. Clone and Install
 
 ```bash
-git clone https://github.com/relliv/chromium-pdf-service.git
+git clone https://github.com/chromium-pdf/chromium-pdf-service.git
 cd chromium-pdf-service
 
 # Install dependencies

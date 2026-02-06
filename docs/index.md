@@ -11,7 +11,7 @@ hero:
       link: /guide/getting-started
     - theme: alt
       text: View on GitHub
-      link: https://github.com/relliv/chromium-pdf-service
+      link: https://github.com/chromium-pdf/chromium-pdf-service
 
 features:
   - icon: 📄

@@ -4,7 +4,8 @@ import { copyOrDownloadAsMarkdownButtons } from 'vitepress-plugin-llms';
 
 export default defineConfig({
   title: 'Chromium PDF Service',
-  description: 'A PDF and screenshot generation service built with Fastify, TypeScript, Playwright, and Docker',
+  description:
+    'A PDF and screenshot generation service built with Fastify, TypeScript, Playwright, and Docker',
   base: '/chromium-pdf-service/',
 
   head: [['link', { rel: 'icon', type: 'image/svg+xml', href: 'https://fav.farm/📜' }]],
@@ -29,7 +30,7 @@ export default defineConfig({
       { text: 'Development', link: '/development/' },
       {
         text: 'GitHub',
-        link: 'https://github.com/relliv/chromium-pdf-service',
+        link: 'https://github.com/chromium-pdf/chromium-pdf-service',
       },
     ],
 
@@ -87,7 +88,7 @@ export default defineConfig({
       ],
     },
 
-    socialLinks: [{ icon: 'github', link: 'https://github.com/relliv/chromium-pdf-service' }],
+    socialLinks: [{ icon: 'github', link: 'https://github.com/chromium-pdf/chromium-pdf-service' }],
 
     footer: {
       message: 'Released under the MIT License.',

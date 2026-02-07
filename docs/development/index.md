@@ -28,9 +28,6 @@ npx playwright install chromium
 ```bash
 # Copy example environment file
 cp .env.example .env
-
-# Edit as needed
-vim .env
 ```
 
 ### 3. Run Development Server

@@ -20,14 +20,14 @@ FROM mcr.microsoft.com/playwright:v1.57.0-jammy
 
 WORKDIR /app
 
-# Install only Chromium (not all browsers)
-ENV PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
-RUN npx playwright install chromium
-
 # Copy built files from builder stage
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package*.json ./
+
+# Install only Chromium (not all browsers) - AFTER copying node_modules
+ENV PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
+RUN npx playwright install chromium
 
 # Create directories for data, PDFs, and logs (will be overwritten by bind mounts)
 RUN mkdir -p /app/data /app/pdf-files /app/logs

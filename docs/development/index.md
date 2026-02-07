@@ -183,6 +183,69 @@ Logs are written to:
 - Console (pretty-printed in development)
 - `logs/` directory (JSON format)
 
+### Using launchOptions for Browser Debugging
+
+When debugging PDF or screenshot generation issues, you can pass custom browser `launchOptions` per request to see what's happening in the browser. This is especially useful for:
+
+**Visual Debugging with Non-Headless Mode:**
+
+Running the browser in non-headless mode lets you see exactly what the page looks like before PDF/screenshot generation:
+
+```bash
+curl -X POST http://localhost:3000/api/pdf/from-url \
+  -H "Content-Type: application/json" \
+  -d '{
+    "requestedKey": "debug-test",
+    "url": "https://example.com",
+    "options": {
+      "browser": {
+        "launchOptions": {
+          "headless": false
+        }
+      }
+    }
+  }'
+```
+
+**Common Debugging Scenarios:**
+
+1. **Layout Issues**: Use `headless: false` to visually inspect page rendering before PDF generation
+2. **Font Problems**: Add `--disable-font-subpixel-positioning` to args for consistent font rendering
+3. **Security Errors**: Use `--no-sandbox` and `--disable-setuid-sandbox` in containerized environments
+4. **Network Issues**: Add `--disable-web-security` (development only!) to bypass CORS restrictions
+5. **Performance Testing**: Use `--single-process` to simplify debugging
+
+**Example with Multiple Debug Args:**
+
+```json
+{
+  "requestedKey": "debug-complex",
+  "html": "<h1>Test Page</h1>",
+  "options": {
+    "browser": {
+      "launchOptions": {
+        "headless": false,
+        "args": [
+          "--window-size=1920,1080",
+          "--disable-gpu",
+          "--no-sandbox",
+          "--disable-setuid-sandbox"
+        ]
+      },
+      "waitAfter": 2000
+    }
+  }
+}
+```
+
+**Important Notes:**
+
+- Custom `launchOptions` create a dedicated browser instance for that job
+- The browser is automatically closed after job completion
+- Without custom `launchOptions`, jobs use the shared browser instance
+- Non-headless mode is not recommended for production use
+- Some args like `--no-sandbox` reduce security and should only be used in development
+
 ## Making Changes
 
 ### Adding a New Route

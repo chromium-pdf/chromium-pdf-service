@@ -33,7 +33,7 @@ docker run -d \
   --name pdf-service \
   -p 3000:3000 \
   -v $(pwd)/pdf-files:/app/pdf-files \
-  ghcr.io/relliv/chromium-pdf-service:latest
+  ghcr.io/chromium-pdf/chromium-pdf-service:latest
 
 # Test the service
 curl http://localhost:3000/health
@@ -45,7 +45,7 @@ Or with Docker Compose:
 # docker-compose.yml
 services:
   pdf-service:
-    image: ghcr.io/relliv/chromium-pdf-service:latest
+    image: ghcr.io/chromium-pdf/chromium-pdf-service:latest
     ports:
       - "3000:3000"
     volumes:

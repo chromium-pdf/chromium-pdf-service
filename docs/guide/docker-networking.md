@@ -45,7 +45,7 @@ When containers are on the same network, use service names:
 docker network create my-network
 ```
 
-2. Connect both containers to it:
+1. Connect both containers to it:
 
 ```yaml
 # docker-compose.yml for PDF service
@@ -96,7 +96,7 @@ Map your local domain to the host gateway:
 ```yaml
 services:
   chromium-pdf-service:
-    image: relliv/chromium-pdf-service:latest
+    image: chromium-pdf/chromium-pdf-service:latest
     extra_hosts:
       - "myapp.test:host-gateway"
       - "localhost.test:host-gateway"
@@ -130,7 +130,7 @@ If you have a local DNS server, configure Docker to use it:
 ```yaml
 services:
   chromium-pdf-service:
-    image: relliv/chromium-pdf-service:latest
+    image: chromium-pdf/chromium-pdf-service:latest
     dns:
       - 192.168.1.1  # Your router/DNS server
     extra_hosts:
@@ -153,7 +153,7 @@ services:
 ### Option 2: Use --network host
 
 ```bash
-docker run --network host relliv/chromium-pdf-service:latest
+docker run --network host chromium-pdf/chromium-pdf-service:latest
 ```
 
 ::: warning
@@ -190,7 +190,7 @@ When using the [Playground](/development/playground) with a containerized PDF se
 # docker-compose.yml
 services:
   chromium-pdf-service:
-    image: relliv/chromium-pdf-service:latest
+    image: chromium-pdf/chromium-pdf-service:latest
     ports:
       - "4500:3000"
     extra_hosts:

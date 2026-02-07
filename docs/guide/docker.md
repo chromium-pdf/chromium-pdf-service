@@ -6,10 +6,10 @@ The easiest way to get started is using the pre-built image from GitHub Containe
 
 ```bash
 # Pull the latest image
-docker pull ghcr.io/relliv/chromium-pdf-service:latest
+docker pull ghcr.io/chromium-pdf/chromium-pdf-service:latest
 
 # Or pull a specific version
-docker pull ghcr.io/relliv/chromium-pdf-service:0.0.2-alpha
+docker pull ghcr.io/chromium-pdf/chromium-pdf-service:0.0.2-alpha
 ```
 
 ### Run the Container
@@ -19,7 +19,7 @@ docker run -d \
   --name pdf-service \
   -p 3000:3000 \
   -v $(pwd)/pdf-files:/app/pdf-files \
-  ghcr.io/relliv/chromium-pdf-service:latest
+  ghcr.io/chromium-pdf/chromium-pdf-service:latest
 ```
 
 ### Available Tags
@@ -38,7 +38,7 @@ docker run -d \
 ```yaml
 services:
   pdf-service:
-    image: ghcr.io/relliv/chromium-pdf-service:latest
+    image: ghcr.io/chromium-pdf/chromium-pdf-service:latest
     ports:
       - "3000:3000"
     volumes:
@@ -74,7 +74,7 @@ services:
       - pdf-service
 
   pdf-service:
-    image: ghcr.io/relliv/chromium-pdf-service:latest
+    image: ghcr.io/chromium-pdf/chromium-pdf-service:latest
     ports:
       - "4500:3000"
     volumes:
@@ -88,14 +88,14 @@ services:
 
 Access from your app container:
 
-```
+```txt
 http://pdf-service:3000/api/pdf/from-url
 http://pdf-service:3000/api/screenshot/from-url
 ```
 
 Access from host machine:
 
-```
+```txt
 http://localhost:4500/api/pdf/from-url
 http://localhost:4500/api/screenshot/from-url
 ```
@@ -107,7 +107,7 @@ Configure the service with environment variables:
 ```yaml
 services:
   pdf-service:
-    image: ghcr.io/relliv/chromium-pdf-service:latest
+    image: ghcr.io/chromium-pdf/chromium-pdf-service:latest
     environment:
       - NODE_ENV=production
       - LOG_LEVEL=info

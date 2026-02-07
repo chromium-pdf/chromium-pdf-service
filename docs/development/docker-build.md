@@ -112,6 +112,7 @@ curl http://localhost:3000/health/live
 ```
 
 Expected response:
+
 ```json
 {"status":"healthy","timestamp":"2025-01-01T00:00:00.000Z"}
 ```
@@ -275,10 +276,11 @@ services:
 This project uses GitHub Actions to automatically build and publish Docker images to GitHub Container Registry (ghcr.io).
 
 **Workflow:**
+
 1. Push a version tag (e.g., `git tag v1.0.0 && git push --tags`)
 2. Tests workflow runs automatically
 3. On test success, Docker image is built for `linux/amd64` and `linux/arm64`
-4. Image is pushed to `ghcr.io/relliv/chromium-pdf-service`
+4. Image is pushed to `ghcr.io/chromium-pdf/chromium-pdf-service`
 
 **Versioning:**
 
@@ -320,5 +322,5 @@ git push origin v1.0.0
 # The workflow will automatically:
 # 1. Run all tests
 # 2. Build multi-platform image
-# 3. Push to ghcr.io/relliv/chromium-pdf-service:1.0.0
+# 3. Push to ghcr.io/chromium-pdf/chromium-pdf-service:1.0.0
 ```

@@ -2,8 +2,8 @@
 
 [![Tests](https://github.com/chromium-pdf/chromium-pdf-service/actions/workflows/test.yml/badge.svg)](https://github.com/chromium-pdf/chromium-pdf-service/actions/workflows/test.yml)
 [![Docker](https://github.com/chromium-pdf/chromium-pdf-service/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/chromium-pdf/chromium-pdf-service/actions/workflows/docker-publish.yml)
-[![Docker Image](https://img.shields.io/badge/ghcr.io-chromium--pdf--service-blue?logo=docker)](https://ghcr.io/relliv/chromium-pdf-service)
-[![Image Size](https://ghcr-badge.egpl.dev/relliv/chromium-pdf-service/size)](https://ghcr.io/relliv/chromium-pdf-service)
+[![Docker Image](https://img.shields.io/badge/ghcr.io-chromium--pdf--service-blue?logo=docker)](https://ghcr.io/chromium-pdf/chromium-pdf-service)
+[![Image Size](https://ghcr-badge.egpl.dev/chromium-pdf/chromium-pdf-service/size)](https://ghcr.io/chromium-pdf/chromium-pdf-service)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 A simple PDF and screenshot generation service built with Fastify, TypeScript, Playwright, and Docker.
@@ -28,7 +28,7 @@ A simple PDF and screenshot generation service built with Fastify, TypeScript, P
 
 ```bash
 # Using pre-built image (recommended)
-docker run -d -p 3000:3000 ghcr.io/relliv/chromium-pdf-service:latest
+docker run -d -p 3000:3000 ghcr.io/chromium-pdf/chromium-pdf-service:latest
 
 # Or build locally with Docker Compose
 docker-compose up -d
@@ -67,10 +67,10 @@ curl -X POST http://localhost:3000/api/screenshot/from-url \
 
 ## 📚 Documentation
 
-- [Getting Started](https://relliv.github.io/chromium-pdf-service/guide/getting-started)
-- [API Reference](https://relliv.github.io/chromium-pdf-service/api/endpoints)
-- [Configuration](https://relliv.github.io/chromium-pdf-service/config/settings)
-- [Docker Setup](https://relliv.github.io/chromium-pdf-service/guide/docker)
+- [Getting Started](https://chromium-pdf.github.io/chromium-pdf-service/guide/getting-started)
+- [API Reference](https://chromium-pdf.github.io/chromium-pdf-service/api/endpoints)
+- [Configuration](https://chromium-pdf.github.io/chromium-pdf-service/config/settings)
+- [Docker Setup](https://chromium-pdf.github.io/chromium-pdf-service/guide/docker)
 
 ## 📄 License
 
